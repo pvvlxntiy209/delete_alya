@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>Heart Animation</title>
     <style>
         body { margin: 0; background: black; overflow: hidden; }
         canvas { display: block; }
@@ -14,46 +15,51 @@
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
     const phrases = [];
-    const text = "óäàëè áûñòðî";
-    const totalPhrases = 75; // Êîëè÷åñòâî íàäïèñåé
+    // "удали быстро" на языке кодов, чтобы не было кракозябр
+    const text = "\u0443\u0434\u0430\u043B\u0438\u0020\u0431\u044B\u0441\u0442\u0440\u043E"; 
+    const totalPhrases = 55; // Еще меньше фраз для идеальной читаемости
 
-    // Èíèöèàëèçàöèÿ ôðàç
     for (let i = 0; i < totalPhrases; i++) {
         phrases.push({
-            t: (i / totalPhrases) * Math.PI * 2, // Íà÷àëüíàÿ ïîçèöèÿ íà êðèâîé
-            speed: 0.01 + Math.random() * 0.02   // Ñêîðîñòü äâèæåíèÿ
+            t: (i / totalPhrases) * Math.PI * 2, 
+            speed: 0.005
         });
     }
 
     function draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Ýôôåêò øëåéôà
+        ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.font = '16px Arial';
-        ctx.fillStyle = '#ff7b9c'; // Ðîçîâûé öâåò
+        // Используем стандартный шрифт, который точно есть в системе
+        ctx.font = 'bold 20px sans-serif'; 
+        ctx.fillStyle = '#ff7b9c'; 
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ff7b9c';
+        ctx.textAlign = "center";
 
         phrases.forEach(p => {
-            // Ìàòåìàòèêà ñåðäöà
             const x = 16 * Math.pow(Math.sin(p.t), 3);
             const y = -(13 * Math.cos(p.t) - 5 * Math.cos(2 * p.t) - 2 * Math.cos(3 * p.t) - Math.cos(4 * p.t));
 
-            // Ìàñøòàáèðóåì è öåíòðèðóåì
-            const posX = canvas.width / 2 + x * 15;
-            const posY = canvas.height / 2 + y * 15;
+            // Сделал сердце чуть больше (множитель 20)
+            const posX = canvas.width / 2 + x * 20;
+            const posY = canvas.height / 2 + y * 20;
 
-            // Ðèñóåì òåêñò
             ctx.save();
             ctx.translate(posX, posY);
-            ctx.rotate(p.t + Math.PI / 2); // Ïîâîðà÷èâàåì òåêñò ïî òðàåêòîðèè
+            ctx.rotate(p.t + Math.PI / 2); 
             ctx.fillText(text, 0, 0);
             ctx.restore();
 
-            // Äâèãàåì ôðàçó ïî êðóãó
-            p.t += 0.01;
+            p.t += 0.008; 
         });
 
         requestAnimationFrame(draw);
